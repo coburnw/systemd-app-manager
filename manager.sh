@@ -1,49 +1,78 @@
 #!/bin/bash
-service="myapp"
+service="my_app"
 
-echo "systemd $service.service unit manager"
+systemctl="systemctl --user"
+systemd="/usr/lib/systemd/user"
+#systemd=~/.systemd/user
 
-OPTIONS="edit install reload enable disable start stop status log quit"
+#systemctl="systemctl --system"
+#systemd="/usr/lib/systemd/system"
+
+echo "systemd user $service.service unit manager"
+echo
+echo "https://github.com/torfsen/python-systemd-tutorial"
+echo "https://wiki.archlinux.org/index.php/Systemd"
+echo
+OPTIONS="install edit reload enable disable start stop status log quit"
 
 select choice in $OPTIONS; do
     if [ "$choice" = "edit" ]; then
         # edit service file
-        nano /lib/systemd/system/$service.service
+        cmd="sudo nano $systemd/$service.service"
+	echo $cmd
+	$cmd
     
     elif [ "$choice" = "install" ]; then
         # transfer the service file to systemd's control
-        cp $service.service /lib/systemd/system
+	#ln -s “$service.service” /etc/systemd/system/$service.service
+        cmd="sudo cp $service.service $systemd"
+	echo $cmd
+	$cmd
 	 
     elif [ "$choice" = "reload" ]; then
 	# reload service file after edit
-	sudo systemctl daemon-reload
+	cmd="$systemctl daemon-reload"
+	echo $cmd
+	$cmd
 
     elif [ "$choice" = "enable" ]; then
 	# enable service
-	sudo systemctl enable $service.service
+	cmd="$systemctl enable $service.service"
+	echo $cmd
+	$cmd
 
     elif [ "$choice" = "disable" ]; then
 	# disable service
-	sudo systemctl disable $service.service
+	cmd="$systemctl disable $service.service"
+	echo $cmd
+	$cmd
 
     elif [ "$choice" = "start" ]; then
 	# start it up
-	sudo systemctl start $service.service
+	cmd="$systemctl start $service.service"
+	echo $cmd
+	$cmd
 
     elif [ "$choice" = "stop" ]; then
 	# stop it
-	sudo systemctl stop $service.service
+	cmd="$systemctl stop $service.service"
+	echo $cmd
+	$cmd
 
     elif [ "$choice" = "status" ]; then
 	#check status
-	systemctl status $service.service
+	cmd="$systemctl status $service.service"
+	echo $cmd
+	$cmd
 
     elif [ "$choice" = "log" ]; then
 	# view log
-	journalctl -u $service
+	cmd="journalctl -u $service"
+	echo $cmd
+	$cmd
 
     elif [ "$choice" = "quit" ]; then
-	# view log
+	echo "Done"
 	exit
     fi
 done
