@@ -1,0 +1,11 @@
+[Unit]
+Description=My App Description
+After=network.target
+
+[Service]
+WorkingDirectory=/home/pi/myapp
+ExecStart=/home/pi/my_env/bin/python myapp.py
+
+[Install]
+WantedBy=multi-user.target
+
