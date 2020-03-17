@@ -1,9 +1,9 @@
 #!/bin/bash
 service="my_app"
 
+# choose user or system control
 systemctl="systemctl --user"
-systemd="/usr/lib/systemd/user"
-#systemd=~/.systemd/user
+systemd=~/.config/systemd/user
 
 #systemctl="systemctl --system"
 #systemd="/usr/lib/systemd/system"
@@ -13,22 +13,29 @@ echo
 echo "https://github.com/torfsen/python-systemd-tutorial"
 echo "https://wiki.archlinux.org/index.php/Systemd"
 echo
-OPTIONS="install edit reload enable disable start stop status log quit"
+OPTIONS="install edit linger reload enable disable start stop status log quit"
 
 select choice in $OPTIONS; do
     if [ "$choice" = "edit" ]; then
         # edit service file
-        cmd="sudo nano $systemd/$service.service"
+        cmd="nano $systemd/$service.service"
 	echo $cmd
 	$cmd
     
     elif [ "$choice" = "install" ]; then
         # transfer the service file to systemd's control
 	#ln -s “$service.service” /etc/systemd/system/$service.service
-        cmd="sudo cp $service.service $systemd"
+        cmd="cp $service.service $systemd"
 	echo $cmd
 	$cmd
-	 
+
+    elif [ "$choice" = "linger" ]; then
+        # allow user.service to start on boot without login
+	# not applicable to system.service
+        cmd="loginctl enable-linger"
+	echo $cmd
+	$cmd
+	
     elif [ "$choice" = "reload" ]; then
 	# reload service file after edit
 	cmd="$systemctl daemon-reload"
