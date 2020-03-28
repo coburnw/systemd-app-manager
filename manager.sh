@@ -1,5 +1,5 @@
 #!/bin/bash
-service="my_app"
+service="mud_phish"
 
 # choose user or system control
 systemctl="systemctl --user"
@@ -13,7 +13,7 @@ echo
 echo "https://github.com/torfsen/python-systemd-tutorial"
 echo "https://wiki.archlinux.org/index.php/Systemd"
 echo
-OPTIONS="install edit linger reload enable disable start stop status log quit"
+OPTIONS="install edit show-linger linger-on reload enable disable start stop status log quit"
 
 select choice in $OPTIONS; do
     if [ "$choice" = "edit" ]; then
@@ -29,10 +29,24 @@ select choice in $OPTIONS; do
 	echo $cmd
 	$cmd
 
-    elif [ "$choice" = "linger" ]; then
+    elif [ "$choice" = "show-linger" ]; then
+        # allow user.service to start on boot without login
+	# not applicable to system.service
+        cmd="loginctl --property=Linger show-user $USER"
+	echo $cmd
+	$cmd
+	
+    elif [ "$choice" = "linger-on" ]; then
         # allow user.service to start on boot without login
 	# not applicable to system.service
         cmd="loginctl enable-linger"
+	echo $cmd
+	$cmd
+	
+    elif [ "$choice" = "linger-off" ]; then
+        # allow user.service to start on boot without login
+	# not applicable to system.service
+        cmd="loginctl disable-linger"
 	echo $cmd
 	$cmd
 	
@@ -74,7 +88,7 @@ select choice in $OPTIONS; do
 
     elif [ "$choice" = "log" ]; then
 	# view log
-	cmd="journalctl -u $service"
+	cmd="journalctl --user-unit $service"
 	echo $cmd
 	$cmd
 
